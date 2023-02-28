@@ -12,7 +12,7 @@ interface TimeToWordConvertingInterface
     public function convert(int $hours, int $minutes);
 }
 
-class TimeToWordConverter
+class TimeToWordConverter implements TimeToWordConvertingInterface
 {
     /**
      * Вариации часа
