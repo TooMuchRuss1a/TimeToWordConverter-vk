@@ -72,14 +72,17 @@ class TimeToWordConverter implements TimeToWordConvertingInterface
      * @param int $hours
      * @return string
      */
-    protected static function getHoursWord(int $hours) {
+    protected static function getHoursWord(int $hours)
+    {
         switch ($hours) {
             case 1:
                 return 'час';
+
             case 2:
             case 3:
             case 4:
                 return 'часа';
+
             default:
                 return 'часов';
         }
@@ -92,11 +95,11 @@ class TimeToWordConverter implements TimeToWordConvertingInterface
      * @param bool $next
      * @return string[]
      */
-    protected static function getHours(int $hours, bool $next = false) {
+    protected static function getHours(int $hours, bool $next = false)
+    {
         if ($next) {
             $hours++;
-            if ($hours > 12)
-                $hours = 1;
+            if ($hours > 12) $hours = 1;
         }
 
         return self::hours[$hours];
@@ -108,16 +111,18 @@ class TimeToWordConverter implements TimeToWordConvertingInterface
      * @param int $minutes
      * @return string
      */
-    protected static function getMinutesWord(int $minutes) {
-        if ($minutes >= 11 && $minutes <= 14)
-            return 'минут';
+    protected static function getMinutesWord(int $minutes)
+    {
+        if ($minutes >= 11 && $minutes <= 14) return 'минут';
         switch ($minutes % 10) {
             case 1:
                 return 'минута';
+
             case 2:
             case 3:
             case 4:
                 return 'минуты';
+
             default:
                 return 'минут';
         }
@@ -129,8 +134,9 @@ class TimeToWordConverter implements TimeToWordConvertingInterface
      * @param int $minutes
      * @return string
      */
-    protected static function getMinutes(int $minutes) {
-        if ($minutes < 21 || !$minutes < 21 && $minutes % 10 == 0 )
+    protected static function getMinutes(int $minutes)
+    {
+        if ($minutes < 21 || !$minutes < 21 && $minutes % 10 == 0)
             return self::minutes[$minutes];
         else
             return self::minutes[intdiv($minutes, 10) * 10] . ' ' . self::minutes[$minutes % 10];
@@ -143,29 +149,35 @@ class TimeToWordConverter implements TimeToWordConvertingInterface
      * @param int $minutes
      * @return string
      */
-    public function convert(int $hours, int $minutes) {
+    public function convert(int $hours, int $minutes)
+    {
         switch (true) {
             case $minutes == 0:
                 $converted = self::getHours($hours)[0] . ' ' . self::getHoursWord($hours);
                 break;
+
             case $minutes == 15:
                 $converted = 'четверть ' . self::getHours($hours, true)[2];
                 break;
+
             case $minutes == 30:
                 $converted = 'половина ' . self::getHours($hours, true)[2];
                 break;
+
             case $minutes < 30:
                 $converted = self::getMinutes($minutes) . ' ' . self::getMinutesWord($minutes) . ' после ' . self::getHours($hours)[1];
                 break;
+
             case $minutes > 30:
                 $minutes = 60 - $minutes;
                 $converted = self::getMinutes($minutes) . ' ' . self::getMinutesWord($minutes) . ' до ' . self::getHours($hours, true)[1];
                 break;
+
             default:
                 $converted = self::getHours($hours)[0] . ' ' . self::getHoursWord($hours) . ' ' . self::getMinutes($minutes) . ' ' . self::getMinutesWord($minutes);
                 break;
         }
 
-        return mb_strtoupper(mb_substr($converted, 0 ,1, 'UTF-8'), 'UTF-8') . mb_substr($converted, 1, strlen($converted) - 1, 'UTF-8');
+        return mb_strtoupper(mb_substr($converted, 0, 1, 'UTF-8'), 'UTF-8') . mb_substr($converted, 1, strlen($converted) - 1, 'UTF-8');
     }
 }
